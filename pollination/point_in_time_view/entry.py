@@ -133,7 +133,8 @@ class PointInTimeViewEntryPoint(DAG):
         sub_paths={
             'view': 'view/{{item.full_id}}.vf',
             'octree_file': 'scene.oct',
-            'bsdfs': 'bsdf'
+            'bsdfs': 'bsdf',
+            'ies': 'ies'
             }
     )
     def point_in_time_view_ray_tracing(
@@ -144,7 +145,8 @@ class PointInTimeViewEntryPoint(DAG):
         octree_file=prepare_folder_point_in_time_view._outputs.resources,
         view_name='{{item.full_id}}',
         view=prepare_folder_point_in_time_view._outputs.model_folder,
-        bsdfs=prepare_folder_point_in_time_view._outputs.model_folder
+        bsdfs=prepare_folder_point_in_time_view._outputs.model_folder,
+        ies=prepare_folder_point_in_time_view._outputs.model_folder
     ):
         # this task doesn't return a file for each loop.
         # instead we access the results folder directly as an output

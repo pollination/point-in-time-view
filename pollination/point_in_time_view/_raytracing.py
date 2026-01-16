@@ -66,11 +66,16 @@ class PointInTimeViewRayTracing(DAG):
         optional=True
     )
 
+    ies = Inputs.folder(
+        description='Folder containing any IES files needed for ray tracing.',
+        optional=True
+    )
+
     @task(template=SplitView)
     def split_view(
         self, input_view=view, view_count=view_count, resolution=resolution,
         overture=skip_overture, scene_file=octree_file,
-        radiance_parameters=radiance_parameters, bsdf_folder=bsdfs
+        radiance_parameters=radiance_parameters, bsdf_folder=bsdfs, ies_folder=ies
     ):
         return [
             {'from': SplitView()._outputs.views_list},
@@ -90,7 +95,7 @@ class PointInTimeViewRayTracing(DAG):
         resolution=resolution, scale_factor=2,
         ambient_cache=split_view._outputs.ambient_cache,
         view=split_view._outputs.output_folder, scene_file=octree_file,
-        bsdf_folder=bsdfs
+        bsdf_folder=bsdfs,  ies_folder=ies
     ):
         return [
             {
