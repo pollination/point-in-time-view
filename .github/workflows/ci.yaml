@@ -14,23 +14,22 @@ jobs:
       - name: set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
-      - name: set up node  # we need node for for semantic release
-        uses: actions/setup-node@v2.1.2
+          python-version: '3.10'
+      - name: set up node # we need node for for semantic release
+        uses: actions/setup-node@v4
         with:
-          node-version: 14.2.0
+          node-version: 22.2.0
       - name: install python dependencies
         run: |
           pip install -r dev-requirements.txt
           pip install .
       - name: install semantic-release
-        run:
-          npm install @semantic-release/exec
+        run: npm install @semantic-release/exec
       - name: run semantic release
         id: new_release
         run: |
-          nextRelease="`npx semantic-release@^17.0.0 --dryRun | grep -oP 'Published release \K.*? ' || true`"
-          npx semantic-release@^17.0.0
+          nextRelease="`npx semantic-release@^23.1.1 --dryRun | grep -oP 'Published release \K.*? ' || true`"
+          npx semantic-release@^23.1.1
           echo "::set-output name=tag::$nextRelease"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,13 +49,13 @@ jobs:
       - name: set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: '3.10'
       - name: install python dependencies
         run: pip install .
       - name: deploy to staging
         run: |
           queenbee
-          pollination dsl push pollination-point-in-time-view --tag ${{needs.deploy.outputs.tag}} -e https://api.staging.pollination.cloud -src https://api.staging.pollination.cloud/registries --push-dependencies
+          pollination dsl push pollination-point-in-time-view --tag ${{needs.deploy.outputs.tag}} -e https://api.staging.pollination.solutions -src https://api.staging.pollination.solutions/registries --push-dependencies
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QB_POLLINATION_TOKEN: ${{ secrets.POLLINATION_STAGING_LADYBUGBOT_TOKEN }}
@@ -70,7 +69,7 @@ jobs:
       - name: set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: '3.10'
       - name: install python dependencies
         run: |
           pip install pollination-point-in-time-view
@@ -78,7 +77,7 @@ jobs:
       - name: deploy to production
         run: |
           queenbee
-          pollination dsl push pollination-point-in-time-view -e https://api.pollination.cloud -src https://api.pollination.cloud/registries --push-dependencies
+          pollination dsl push pollination-point-in-time-view -e https://api.pollination.solutions -src https://api.pollination.solutions/registries --push-dependencies
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QB_POLLINATION_TOKEN: ${{ secrets.POLLINATION_LADYBUGBOT_TOKEN }}
